@@ -4,7 +4,7 @@ const { Op } = require('sequelize')
 
 const uploadImage = async (fileBuffer, filename, folder = 'productos') => {
   const prefix = process.env.CLOUDINARY_FOLDER_PREFIX || ''
-  const fullFolder = prefix ? `${prefix}/${folder}` : folder
+  const fullFolder = prefix ? `clients/${prefix}/${folder}` : `clients/${folder}`
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -132,8 +132,8 @@ const moveToFolder = async (id, targetFolder) => {
   const oldPublicId = media.publicId
   const basename = oldPublicId.split('/').pop()
   const newPublicId = prefix
-    ? `${prefix}/${targetFolder}/${basename}`
-    : `${targetFolder}/${basename}`
+    ? `clients/${prefix}/${targetFolder}/${basename}`
+    : `clients/${targetFolder}/${basename}`
 
   console.log('=== moveToFolder DEBUG ===')
   console.log('media.id:', media.id)
