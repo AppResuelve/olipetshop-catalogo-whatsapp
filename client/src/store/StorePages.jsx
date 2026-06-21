@@ -19,6 +19,9 @@ export default function StorePages() {
   const isHome = location.pathname === '/'
 
   useEffect(() => {
+    if (store?.business_name) {
+      document.title = store.business_name
+    }
     if (store?.favicon_url) {
       let link = document.querySelector("link[rel~='icon']")
       if (!link) {
@@ -28,7 +31,7 @@ export default function StorePages() {
       }
       link.href = store.favicon_url
     }
-  }, [store?.favicon_url])
+  }, [store?.business_name, store?.favicon_url])
 
   if (loading) return null
 

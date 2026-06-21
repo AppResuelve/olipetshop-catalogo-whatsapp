@@ -94,6 +94,7 @@ export default function Store() {
         <iframe
           key={iframeKey}
           src={storeUrl}
+          inert
           className="pointer-events-none absolute top-0 left-0"
           style={{
             width: `${IFRAME_W}px`,
