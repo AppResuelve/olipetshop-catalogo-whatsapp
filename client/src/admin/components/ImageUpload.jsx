@@ -7,6 +7,7 @@ export default function ImageUpload({ images = [], onChange, max = 4, cols = 4, 
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef(null)
   const Alert = useAlert()
+  const colClasses = { 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-4' }
 
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files)
@@ -51,7 +52,7 @@ export default function ImageUpload({ images = [], onChange, max = 4, cols = 4, 
       </label>
       <p className="text-xs text-zinc-500 -mt-1 mb-3">jpg, png, webp, gif — Máx. 10MB</p>
 
-      <div className={`grid gap-2 lg:gap-3 mb-3 grid-cols-${cols}`}>
+      <div className={`grid gap-2 lg:gap-3 mb-3 ${colClasses[cols] || 'grid-cols-4'}`}>
         {images.map((url, i) => (
           <div key={i} className="relative group aspect-square rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700">
             <img src={url} alt="" className="w-full h-full object-cover" />
