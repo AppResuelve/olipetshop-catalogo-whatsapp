@@ -73,12 +73,14 @@ export default function Products() {
   const categoryLabels = ["Todos", ...categories.map((c) => c.name)]
 
   return (
-    <section className="relative pt-10 md:pt-20 pb-16 px-3 sm:px-6 lg:px-8 overflow-hidden">
-      <div className="absolute top-20 right-10 opacity-[0.04] pointer-events-none">
-        <PawIcon size={180} />
-      </div>
-      <div className="absolute bottom-10 left-6 opacity-[0.03] pointer-events-none rotate-45">
-        <PawIcon size={120} />
+    <section className="pt-10 md:pt-20 pb-16 px-3 sm:px-6 lg:px-8">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-10 opacity-[0.04]">
+          <PawIcon size={180} />
+        </div>
+        <div className="absolute bottom-10 left-6 opacity-[0.03] rotate-45">
+          <PawIcon size={120} />
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto">
