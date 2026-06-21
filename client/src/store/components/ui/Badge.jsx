@@ -1,9 +1,9 @@
 export function Badge({ children, variant = 'default', className = '' }) {
   const variants = {
     default: 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] border-[var(--color-primary)]/20',
-    new: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    sale: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-    bestseller: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    new: 'bg-[var(--color-secondary)]/20 text-yellow-700 border-[var(--color-secondary)]/40',
+    sale: 'bg-[var(--color-primary)]/15 text-[var(--color-primary)] border-[var(--color-primary)]/25',
+    bestseller: 'bg-[var(--color-secondary)]/15 text-yellow-700 border-[var(--color-secondary)]/30',
   }
 
   return (

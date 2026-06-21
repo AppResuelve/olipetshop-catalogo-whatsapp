@@ -8,6 +8,7 @@ import { ProductGrid } from '../ProductGrid'
 import { SearchBar } from '../SearchBar'
 import { CategoryFilter } from '../CategoryFilter'
 import { SectionHeader } from '../components/ui/SectionHeader'
+import { PawIcon } from '../components/ui/PawIcon'
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,7 +73,14 @@ export default function Products() {
   const categoryLabels = ["Todos", ...categories.map((c) => c.name)]
 
   return (
-    <section className="pt-10 md:pt-20 pb-16 px-3 sm:px-6 lg:px-8">
+    <section className="relative pt-10 md:pt-20 pb-16 px-3 sm:px-6 lg:px-8 overflow-hidden">
+      <div className="absolute top-20 right-10 opacity-[0.04] pointer-events-none">
+        <PawIcon size={180} />
+      </div>
+      <div className="absolute bottom-10 left-6 opacity-[0.03] pointer-events-none rotate-45">
+        <PawIcon size={120} />
+      </div>
+
       <div className="max-w-7xl mx-auto">
         <SectionHeader title={title} subtitle={subtitle} className="mb-8" />
 
@@ -103,7 +111,7 @@ export default function Products() {
                 </div>
                 <button
                   onClick={() => setIsFilterOpen(true)}
-                  className="lg:hidden shrink-0 h-11 flex items-center gap-2 px-3 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-primary)]"
+                  className="lg:hidden shrink-0 h-11 flex items-center gap-2 px-3 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-primary)] hover:border-[var(--color-primary)]/30 transition-colors"
                 >
                   <SlidersHorizontal className="w-5 h-5" />
                   {!isSearchFocused && !searchQuery && (
@@ -120,7 +128,7 @@ export default function Products() {
                 </p>
                 <button
                   onClick={handleClearFilters}
-                  className="text-sm text-[var(--color-primary)] hover:underline"
+                  className="text-sm text-[var(--color-primary)] font-medium hover:bg-[var(--color-primary)]/10 px-3 py-1.5 rounded-lg transition-colors"
                 >
                   {clearFilters}
                 </button>
@@ -139,17 +147,29 @@ export default function Products() {
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm disabled:opacity-30"
+                      className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm disabled:opacity-30 hover:border-[var(--color-primary)]/30 transition-colors"
                     >
                       Anterior
                     </button>
-                    <span className="text-sm text-[var(--color-text-secondary)] px-3">
-                      Página {page} de {totalPages}
-                    </span>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setPage(p)}
+                          className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
+                            p === page
+                              ? 'bg-[var(--color-primary)] text-white'
+                              : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)]/20'
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      ))}
+                    </div>
                     <button
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm disabled:opacity-30"
+                      className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm disabled:opacity-30 hover:border-[var(--color-primary)]/30 transition-colors"
                     >
                       Siguiente
                     </button>
@@ -166,7 +186,7 @@ export default function Products() {
                     href={`https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(`🔍 ¡Hola! Me gustaría saber si tienen disponible el producto: ${searchQuery}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-primary)]/10 transition-all duration-200"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200"
                   >
                     <MessageCircle className="w-5 h-5" />
                     Preguntar en WhatsApp
@@ -174,7 +194,7 @@ export default function Products() {
                 ) : (
                   <button
                     onClick={handleClearFilters}
-                    className="text-[var(--color-primary)] font-medium hover:underline"
+                    className="text-[var(--color-primary)] font-medium hover:bg-[var(--color-primary)]/10 px-4 py-2 rounded-lg transition-colors"
                   >
                     {clearFilters}
                   </button>

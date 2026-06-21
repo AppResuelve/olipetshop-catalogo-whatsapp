@@ -173,7 +173,7 @@ export default function ProductDetail() {
             {hasWholesale && (
               <button
                 onClick={handleAddWholesale}
-                className="flex items-center justify-center gap-2 w-full px-8 py-4 rounded-2xl font-semibold border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 transition-all mt-3"
+                className="flex items-center justify-center gap-2 w-full px-8 py-4 rounded-2xl font-semibold border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all mt-3"
               >
                 Agregar por {product.unitsToWholesalePrice} u. (mayorista)
               </button>

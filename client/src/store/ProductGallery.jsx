@@ -33,7 +33,7 @@ export function ProductGallery({ images, productName, discountPercentage }) {
 
         {discountPercentage && (
           <div className="absolute top-3 right-3">
-            <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-emerald-500 text-white">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-[var(--color-secondary)] text-yellow-800">
               {discountPercentage}% OFF
             </span>
           </div>

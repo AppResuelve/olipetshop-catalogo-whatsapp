@@ -29,7 +29,7 @@ export function ProductCard({ product }) {
 
   return (
     <div className="group relative rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden transition-all duration-300 flex flex-col">
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--color-primary)]/10 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--color-secondary)]/10 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       <div className="relative">
         <Link to={`/producto/${product.slug}`} className="block">
           <div className="aspect-square overflow-hidden">
@@ -41,7 +41,7 @@ export function ProductCard({ product }) {
           </div>
           {hasDiscount && (
             <div className="absolute bottom-3 right-3">
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white">
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-[var(--color-secondary)] text-yellow-800">
                 {product.discountPercentage}% OFF
               </span>
             </div>
@@ -115,7 +115,7 @@ export function ProductCard({ product }) {
           {hasWholesale && (
             <button
               onClick={handleAddWholesale}
-              className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-semibold hover:bg-[var(--color-primary)]/10 transition-colors mt-2"
+              className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-semibold hover:bg-[var(--color-primary)] hover:text-white transition-all mt-2"
             >
               Agregar por {product.unitsToWholesalePrice} u.
             </button>

@@ -65,7 +65,7 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-12 text-center">
-        <div className="w-20 h-20 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center mx-auto mb-6">
+        <div className="w-20 h-20 rounded-full bg-[var(--color-secondary)]/20 flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-10 h-10 text-[var(--color-primary)]" />
         </div>
         <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-3">
@@ -118,7 +118,7 @@ export function ContactForm() {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
             placeholder="Juan Pérez"
           />
         </div>
@@ -136,7 +136,7 @@ export function ContactForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
             placeholder="juan@email.com"
           />
         </div>
@@ -154,7 +154,7 @@ export function ContactForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
             placeholder="+54 9 XXX XXX XXXX"
           />
         </div>
@@ -172,13 +172,13 @@ export function ContactForm() {
             value={formData.message}
             onChange={handleChange}
             rows={5}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] transition-colors resize-none"
+            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all resize-none"
             placeholder="Contanos en qué podemos ayudarte..."
           />
         </div>
 
         {status === "error" && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)]">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <p className="text-sm">{errorMessage}</p>
           </div>

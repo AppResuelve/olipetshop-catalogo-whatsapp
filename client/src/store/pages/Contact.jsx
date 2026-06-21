@@ -3,6 +3,7 @@ import { content } from "../../data/siteData";
 import { useStore } from "../context/StoreContext";
 import { ContactForm } from "../ContactForm";
 import { SectionHeader } from "../components/ui/SectionHeader";
+import { PawIcon } from "../components/ui/PawIcon";
 
 export default function Contact() {
   const { title, subtitle, infoTitle } = content.contact;
@@ -10,10 +11,16 @@ export default function Contact() {
 
   return (
     <>
-      <section className="relative pt-10 md:pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-10 md:pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[-120px] left-[-120px] w-[320px] h-[320px] rounded-full bg-[var(--color-primary)]/10 blur-3xl" />
           <div className="absolute bottom-[-120px] right-[-120px] w-[320px] h-[320px] rounded-full bg-[var(--color-secondary)]/10 blur-3xl" />
+        </div>
+        <div className="absolute top-16 right-12 opacity-[0.04] pointer-events-none">
+          <PawIcon size={140} />
+        </div>
+        <div className="absolute bottom-4 left-8 opacity-[0.03] pointer-events-none -rotate-12">
+          <PawIcon size={100} />
         </div>
 
         <div className="relative max-w-7xl mx-auto">
@@ -36,10 +43,10 @@ export default function Contact() {
             <div>
               <SectionHeader title={infoTitle} className="mb-10" />
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {store?.address && (
-                  <div className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/20 flex items-center justify-center shrink-0">
+                  <div className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] border-l-4 border-l-[var(--color-primary)] bg-[var(--color-card)] hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center shrink-0">
                       <MapPin className="w-5 h-5 text-[var(--color-primary)]" />
                     </div>
                     <div>
@@ -58,9 +65,9 @@ export default function Contact() {
                     href={`https://wa.me/${(store?.whatsapp_number || '').replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-[var(--color-primary)]/30 transition-colors"
+                    className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] border-l-4 border-l-[var(--color-secondary)] bg-[var(--color-card)] hover:shadow-md hover:border-[var(--color-primary)]/30 transition-all"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/20 flex items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)]/15 flex items-center justify-center shrink-0">
                       <MessageCircle className="w-5 h-5 text-[var(--color-primary)]" />
                     </div>
                     <div>
@@ -77,9 +84,9 @@ export default function Contact() {
                 {store?.email && (
                   <a
                     href={`mailto:${store?.email}`}
-                    className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-[var(--color-primary)]/30 transition-colors"
+                    className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] border-l-4 border-l-[var(--color-primary)] bg-[var(--color-card)] hover:shadow-md hover:border-[var(--color-primary)]/30 transition-all"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/20 flex items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center shrink-0">
                       <Mail className="w-5 h-5 text-[var(--color-primary)]" />
                     </div>
                     <div>
@@ -110,8 +117,8 @@ export default function Contact() {
                   }).filter(Boolean)
 
                   return (
-                    <div className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/20 flex items-center justify-center shrink-0">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl border border-[var(--color-border)] border-l-4 border-l-[var(--color-secondary)] bg-[var(--color-card)]">
+                      <div className="w-12 h-12 rounded-xl bg-[var(--color-secondary)]/15 flex items-center justify-center shrink-0">
                         <Clock className="w-5 h-5 text-[var(--color-primary)]" />
                       </div>
                       <div>
@@ -120,7 +127,7 @@ export default function Contact() {
                           {formatted.map((s, i) => (
                             <li key={i} className="flex flex-col gap-0.5">
                               <span className="font-semibold">{s.days}</span>
-                              <span className="text-xs opacity-70 bg-[var(--color-primary)]/10 px-2 py-0.5 rounded-md w-fit">{s.times}</span>
+                              <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-[var(--color-secondary)]/15 px-2 py-0.5 rounded-md w-fit">{s.times}</span>
                             </li>
                           ))}
                         </ul>

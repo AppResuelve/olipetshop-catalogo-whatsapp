@@ -45,7 +45,7 @@ export function CategoryFilter({
                 className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === category
                     ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20'
-                    : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-card)]'
+                    : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]/10'
                 }`}
               >
                 {category}
