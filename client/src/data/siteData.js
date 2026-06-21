@@ -1,6 +1,6 @@
 export const siteData = {
   navbar: {
-    logoOnly: true,
+    logoOnly: false,
     items: [
       { label: 'Inicio', href: '/' },
       { label: 'Productos', href: '/productos' },
