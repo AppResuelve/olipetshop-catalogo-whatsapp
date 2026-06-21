@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useStore } from './context/StoreContext'
 import { Navbar, Footer } from './components/layout'
 import { ScrollToTop } from './ScrollToTop'
@@ -15,6 +15,8 @@ import { FloatingWhatsAppButton } from './components/ui/FloatingWhatsAppButton'
 
 export default function StorePages() {
   const { store, loading } = useStore()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
     if (store?.favicon_url) {
@@ -55,7 +57,7 @@ export default function StorePages() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-        <Footer />
+        <Footer waveFromColor={isHome ? '#c70404' : '#ffffff'} />
         <FloatingWhatsAppButton />
       </div>
     </>

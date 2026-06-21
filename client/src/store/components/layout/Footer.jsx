@@ -5,11 +5,12 @@ import { useStore } from "../../context/StoreContext";
 import { PawIcon } from "../ui/PawIcon";
 import { CatDogIcon } from "../ui/CatDogIcon";
 
-/* ── Onda de entrada roja → oscuro ── */
-function FooterWave() {
+/* ── Onda de entrada → oscuro ── */
+function FooterWave({ fromColor = '#c70404' }) {
   return (
     <div
-      className="w-full overflow-hidden leading-none bg-[var(--color-primary)]"
+      className="w-full overflow-hidden leading-none"
+      style={{ backgroundColor: fromColor }}
       aria-hidden="true"
     >
       <svg
@@ -94,7 +95,7 @@ const socialIcons = {
   ),
 };
 
-export function Footer() {
+export function Footer({ waveFromColor }) {
   const { store, categories } = useStore();
   const currentYear = new Date().getFullYear();
   const whatsappNumber = (store?.whatsapp_number || "").replace(/\D/g, "");
@@ -135,17 +136,19 @@ export function Footer() {
 
   return (
     <>
-      {/* Onda transición: rojo CTA → oscuro footer */}
-      <FooterWave />
+      {/* Onda transición: color sección → oscuro footer */}
+      <FooterWave fromColor={waveFromColor} />
 
       <footer className="bg-[#1a1a1a] text-white relative overflow-hidden">
         {/* Patas decorativas de fondo */}
         <PawIcon
-          className="absolute top-8 right-12 w-48 h-48 text-white pointer-events-none rotate-45"
+          size={192}
+          className="absolute top-8 right-12 text-white pointer-events-none rotate-45"
           style={{ opacity: 0.03 }}
         />
         <PawIcon
-          className="absolute bottom-16 left-4 w-32 h-32 text-[var(--color-secondary)] pointer-events-none -rotate-[20deg]"
+          size={128}
+          className="absolute bottom-16 left-4 text-[var(--color-secondary)] pointer-events-none -rotate-[20deg]"
           style={{ opacity: 0.05 }}
         />
 
@@ -312,7 +315,8 @@ export function Footer() {
           {/* ── Copyright ── */}
           <div className="pt-6 border-t border-white/10 flex items-center justify-center gap-3">
             <PawIcon
-              className="w-4 h-4 text-[var(--color-secondary)]"
+              size={16}
+              className="text-[var(--color-secondary)]"
               style={{ opacity: 0.6 }}
             />
             <p className="text-xs text-white/30 text-center">
@@ -320,7 +324,8 @@ export function Footer() {
               reservados.
             </p>
             <PawIcon
-              className="w-4 h-4 text-[var(--color-secondary)]"
+              size={16}
+              className="text-[var(--color-secondary)]"
               style={{ opacity: 0.6 }}
             />
           </div>

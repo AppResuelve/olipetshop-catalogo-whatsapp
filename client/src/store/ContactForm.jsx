@@ -1,10 +1,29 @@
 import { useState } from "react";
-import { Send, CheckCircle, AlertCircle, Loader } from "lucide-react";
+import { Send, AlertCircle, Loader } from "lucide-react";
 import { sendContactForm } from "./services/contactService";
 import { useStore } from "./context/StoreContext";
+import { PawIcon } from "./components/ui/PawIcon";
+
+/* ── Clases compartidas para inputs ── */
+const inputClass = `
+  w-full px-4 py-3.5 rounded-xl text-sm
+  border border-[var(--color-border)]
+  bg-[var(--color-background)]
+  text-[var(--color-text-primary)]
+  placeholder-[var(--color-text-muted)]
+  focus:outline-none
+  focus:border-[var(--color-primary)]
+  focus:ring-2 focus:ring-[var(--color-primary)]/15
+  transition-all duration-200
+`;
+
+const labelClass = `
+  block text-xs font-bold tracking-wide uppercase
+  text-[var(--color-text-muted)] mb-1.5
+`;
 
 export function ContactForm() {
-  const { store } = useStore()
+  const { store } = useStore();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,17 +50,14 @@ export function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationError = validateForm();
     if (validationError) {
       setStatus("error");
       setErrorMessage(validationError);
       return;
     }
-
     setStatus("loading");
     setErrorMessage("");
-
     try {
       await sendContactForm({
         name: formData.name,
@@ -49,8 +65,8 @@ export function ContactForm() {
         phone: formData.phone,
         message: formData.message,
         website: formData.website,
-        receiveEmailsAt: store?.email || '',
-        businessName: store?.business_name || '',
+        receiveEmailsAt: store?.email || "",
+        businessName: store?.business_name || "",
       });
       setStatus("success");
       setFormData({ name: "", email: "", phone: "", message: "", website: "" });
@@ -62,21 +78,52 @@ export function ContactForm() {
     }
   };
 
+  /* ── Estado éxito ── */
   if (status === "success") {
     return (
-      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-12 text-center">
-        <div className="w-20 h-20 rounded-full bg-[var(--color-secondary)]/20 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-10 h-10 text-[var(--color-primary)]" />
+      <div className="rounded-2xl border border-[var(--color-border)] bg-white p-10 text-center relative overflow-hidden">
+        {/* Pata de fondo */}
+        <PawIcon
+          size={160}
+          className="absolute -right-6 -bottom-6 text-[var(--color-secondary)]"
+          style={{ opacity: 0.15 }}
+        />
+
+        {/* Ícono circular */}
+        <div className="relative w-20 h-20 mx-auto mb-6">
+          <div className="w-20 h-20 rounded-full bg-[var(--color-secondary)] flex items-center justify-center">
+            <PawIcon size={40} className="text-[var(--color-text-primary)]" />
+          </div>
+          {/* Check badge */}
+          <span
+            className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full
+            bg-[var(--color-primary)] flex items-center justify-center"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="white"
+              className="w-4 h-4"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </span>
         </div>
-        <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-3">
+
+        <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2 relative">
           ¡Mensaje enviado!
         </h3>
-        <p className="text-[var(--color-text-secondary)] mb-8">
-          Gracias por contactarnos. Te responderemos a la brevedad.
+        <p className="text-[var(--color-text-secondary)] text-sm mb-8 relative">
+          Gracias por contactarnos. Te respondemos a la brevedad.
         </p>
         <button
           onClick={() => setStatus("idle")}
-          className="text-[var(--color-primary)] font-medium hover:underline"
+          className="text-sm text-[var(--color-primary)] font-semibold
+            hover:underline underline-offset-2 relative"
         >
           Enviar otro mensaje
         </button>
@@ -84,13 +131,11 @@ export function ContactForm() {
     );
   }
 
+  /* ── Formulario ── */
   return (
-    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 sm:p-12">
-      <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-8">
-        Enviános tu mensaje
-      </h3>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 sm:p-8">
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        {/* Honeypot anti-spam */}
         <div
           style={{ position: "absolute", left: "-9999px" }}
           aria-hidden="true"
@@ -105,48 +150,45 @@ export function ContactForm() {
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2"
-          >
-            Nombre completo
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
-            placeholder="Juan Pérez"
-          />
+        {/* Nombre + Email en fila en desktop */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="name" className={labelClass}>
+              Nombre completo
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className={inputClass}
+              placeholder="Juan Pérez"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className={labelClass}>
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={inputClass}
+              placeholder="juan@email.com"
+            />
+          </div>
         </div>
 
+        {/* Teléfono */}
         <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
-            placeholder="juan@email.com"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="phone"
-            className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2"
-          >
-            Teléfono (opcional)
+          <label htmlFor="phone" className={labelClass}>
+            Teléfono{" "}
+            <span className="normal-case font-normal text-[var(--color-text-muted)]">
+              (opcional)
+            </span>
           </label>
           <input
             type="tel"
@@ -154,16 +196,14 @@ export function ContactForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
+            className={inputClass}
             placeholder="+54 9 XXX XXX XXXX"
           />
         </div>
 
+        {/* Mensaje */}
         <div>
-          <label
-            htmlFor="message"
-            className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2"
-          >
+          <label htmlFor="message" className={labelClass}>
             Mensaje
           </label>
           <textarea
@@ -172,26 +212,41 @@ export function ContactForm() {
             value={formData.message}
             onChange={handleChange}
             rows={5}
-            className="w-full px-5 py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all resize-none"
+            className={`${inputClass} resize-none`}
             placeholder="Contanos en qué podemos ayudarte..."
           />
         </div>
 
+        {/* Error */}
         {status === "error" && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)]">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl
+            bg-[var(--color-primary)]/8 border border-[var(--color-primary)]/20
+            text-[var(--color-primary)]"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <p className="text-sm">{errorMessage}</p>
           </div>
         )}
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center gap-2
+            px-7 py-3.5 rounded-xl
+            bg-[var(--color-primary)] text-white font-semibold text-sm
+            hover:bg-[var(--color-primary-hover)]
+            hover:-translate-y-0.5
+            hover:shadow-[0_6px_20px_rgba(199,4,4,0.35)]
+            active:translate-y-0 active:shadow-none
+            transition-all duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+            disabled:hover:translate-y-0 disabled:hover:shadow-none"
         >
           {status === "loading" ? (
             <>
-              <Loader className="w-5 h-5 animate-spin" />
+              <Loader className="w-4 h-4 animate-spin" />
               Enviando...
             </>
           ) : (

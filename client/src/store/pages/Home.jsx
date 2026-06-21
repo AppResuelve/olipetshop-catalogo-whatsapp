@@ -174,7 +174,7 @@ export default function Home() {
         <SlideUpImage
           src="/gif/mano1.png"
           position="left"
-          bottom="bottom-10"
+          bottom="top-10"
           wave
           className="w-48 md:w-72"
           style={{ left: "-12px" }}
@@ -277,8 +277,8 @@ export default function Home() {
         style={{ marginTop: "-72px", height: 0 }}
       >
         <PawIcon
-          className="absolute left-0 w-48 h-48 text-[var(--color-secondary)] -rotate-12"
-          opacity={0.08}
+          size={192}
+          className="absolute left-0 text-[var(--color-secondary)] -rotate-12"
         />
       </div>
 

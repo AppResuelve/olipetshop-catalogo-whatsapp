@@ -1,8 +1,10 @@
-export function PawIcon({ className = "", style = {} }) {
+export function PawIcon({ size, className = "", style = {} }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
+      width={size}
+      height={size}
       className={className}
       style={style}
       aria-hidden="true"

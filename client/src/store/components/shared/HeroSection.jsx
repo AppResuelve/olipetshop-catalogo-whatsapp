@@ -82,7 +82,7 @@ export function HeroSection({
               {ctaText && (
                 <Link
                   to={ctaLink}
-                  className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold hover:-translate-y-0.5 transition-all ${ctaStyle}`}
+                   className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-[var(--color-primary)] text-white font-semibold hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(199,4,4,0.35)] transition-all ${ctaStyle}`}
                 >
                   {ctaText}
                 </Link>
@@ -90,7 +90,7 @@ export function HeroSection({
               {secondaryCtaText && (
                 <Link
                   to={secondaryCtaLink}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border border-white text-white font-semibold hover:bg-white/10 transition-all"
+                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-[var(--color-secondary-50)] text-[var(--color-text-primary)] font-semibold hover:bg-[rgba(239,242,58,0.7)] transition-all"
                 >
                   {secondaryCtaText}
                 </Link>
