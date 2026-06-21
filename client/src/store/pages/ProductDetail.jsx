@@ -59,7 +59,7 @@ export default function ProductDetail() {
   }
 
   const quantity = getItemQuantity(product.id)
-  const hasDiscount = product.comparePrice && product.discountPercentage
+  const hasDiscount = product.discountPercentage
   const hasWholesale = product.wholesalePrice && product.unitsToWholesalePrice
 
   return (

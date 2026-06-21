@@ -1,4 +1,5 @@
 const productsService = require('../../services/admin/products.service')
+const { validateProduct, validateBulkProducts } = require('../../validations/product.schema')
 
 const list = async (req, res, next) => {
   try {
@@ -20,7 +21,8 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const product = await productsService.create(req.body)
+    const data = validateProduct(req.body)
+    const product = await productsService.create(data)
     res.status(201).json(product)
   } catch (err) {
     next(err)
@@ -29,7 +31,8 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const product = await productsService.update(req.params.id, req.body)
+    const data = validateProduct(req.body)
+    const product = await productsService.update(req.params.id, data)
     res.json(product)
   } catch (err) {
     next(err)
@@ -47,7 +50,8 @@ const remove = async (req, res, next) => {
 
 const bulkCreate = async (req, res, next) => {
   try {
-    const { products, categoryId } = req.body
+    const products = validateBulkProducts(req.body)
+    const { categoryId } = req.body
     const result = await productsService.bulkCreate(products, categoryId)
     res.status(201).json(result)
   } catch (err) {

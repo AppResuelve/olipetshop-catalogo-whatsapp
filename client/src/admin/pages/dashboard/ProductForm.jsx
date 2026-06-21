@@ -9,6 +9,7 @@ import { useProduct } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
 import api from '../../../api/admin'
 import { useAlert } from '../../components/ui/AlertContext'
+import { calculateComparePrice } from '../../../utils/discount'
 
 const EMPTY_PRODUCT = {
   name: '',
@@ -73,6 +74,12 @@ export default function ProductForm() {
 
     if (field === 'name' && !slugManual) {
       next.slug = slugify(value)
+    }
+
+    if (field === 'retailPrice' || field === 'discountPercentage') {
+      const retail = field === 'retailPrice' ? Number(value) : Number(form.retailPrice)
+      const pct = field === 'discountPercentage' ? Number(value) : Number(form.discountPercentage)
+      next.comparePrice = calculateComparePrice(retail, pct)
     }
 
     setForm(next)
@@ -191,20 +198,25 @@ export default function ProductForm() {
           <Input
             label="Precio de venta"
             type="number"
+            min="0"
             value={form.retailPrice}
             onChange={(e) => handleChange('retailPrice', e.target.value)}
           />
           <Input
-            label="Precio de comparación"
-            type="number"
-            value={form.comparePrice || ''}
-            onChange={(e) => handleChange('comparePrice', e.target.value || null)}
-          />
-          <Input
             label="% Descuento"
             type="number"
+            min="1"
+            max="100"
             value={form.discountPercentage || ''}
             onChange={(e) => handleChange('discountPercentage', e.target.value || null)}
+            placeholder="Ej: 25"
+          />
+          <Input
+            label="Precio de comparación"
+            type="number"
+            min="0"
+            value={form.comparePrice || ''}
+            onChange={(e) => handleChange('comparePrice', e.target.value || null)}
           />
         </div>
 

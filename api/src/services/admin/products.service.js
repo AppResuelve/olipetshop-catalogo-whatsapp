@@ -1,4 +1,5 @@
 const { Product, Category, sequelize } = require('../../models')
+const { resolveDiscountFields } = require('../../utils/discount')
 
 const list = async (query = {}) => {
   const { page = 1, limit = 20, search, categoryId, status } = query
@@ -52,6 +53,15 @@ const create = async (data) => {
   if (!data.slug && data.name) {
     data.slug = slugify(data.name)
   }
+
+  const { comparePrice, discountPercentage } = resolveDiscountFields(
+    data.retailPrice,
+    data.comparePrice,
+    data.discountPercentage
+  )
+  data.comparePrice = comparePrice
+  data.discountPercentage = discountPercentage
+
   return Product.create(data)
 }
 
@@ -60,6 +70,15 @@ const update = async (id, data) => {
   if (!data.slug && data.name) {
     data.slug = slugify(data.name)
   }
+
+  const { comparePrice, discountPercentage } = resolveDiscountFields(
+    data.retailPrice ?? product.retailPrice,
+    data.comparePrice,
+    data.discountPercentage
+  )
+  data.comparePrice = comparePrice
+  data.discountPercentage = discountPercentage
+
   return product.update(data)
 }
 
@@ -93,15 +112,22 @@ const bulkCreate = async (products, categoryId) => {
       warnings.push({ name: p.name, slug })
     }
 
+    const retailPrice = Number(p.price) || 0
+    const { comparePrice, discountPercentage } = resolveDiscountFields(
+      retailPrice,
+      p.comparePrice,
+      p.discountPercentage
+    )
+
     return {
       name: p.name,
       slug,
-      retailPrice: Number(p.price) || 0,
+      retailPrice,
       status: 'draft',
       categoryId: categoryId || null,
       ...(p.description != null && p.description !== '' && { description: String(p.description) }),
-      ...(p.discountPercentage != null && p.discountPercentage !== '' && { discountPercentage: Number(p.discountPercentage) }),
-      ...(p.comparePrice != null && p.comparePrice !== '' && { comparePrice: Number(p.comparePrice) }),
+      ...(discountPercentage != null && { discountPercentage }),
+      ...(comparePrice != null && { comparePrice }),
       ...(p.wholesalePrice != null && p.wholesalePrice !== '' && { wholesalePrice: Number(p.wholesalePrice) }),
       ...(p.wholesaleMinQty != null && p.wholesaleMinQty !== '' && { wholesaleMinQty: Number(p.wholesaleMinQty) }),
       ...(p.images && { images: Array.isArray(p.images) ? p.images : [p.images] }),

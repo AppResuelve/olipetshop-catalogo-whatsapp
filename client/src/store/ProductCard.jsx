@@ -7,7 +7,7 @@ export function ProductCard({ product }) {
   const { addItem, getItemQuantity } = useCart();
   const quantity = getItemQuantity(product.id);
 
-  const hasDiscount = product.comparePrice && product.discountPercentage;
+  const hasDiscount = product.discountPercentage
   const hasWholesale = product.wholesalePrice && product.unitsToWholesalePrice;
 
   const getBadgeVariant = (tag) => {
