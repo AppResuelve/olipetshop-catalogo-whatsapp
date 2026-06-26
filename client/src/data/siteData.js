@@ -4,6 +4,7 @@ export const siteData = {
     items: [
       { label: 'Inicio', href: '/' },
       { label: 'Productos', href: '/productos' },
+      { label: 'Servicios', href: '/servicios' },
       { label: 'Carrito', href: '/carrito', showCartCount: true },
       { label: 'Contacto', href: '/contacto' },
     ],
@@ -17,6 +18,7 @@ export const siteData = {
         links: [
           { label: 'Inicio', href: '/' },
           { label: 'Productos', href: '/productos' },
+          { label: 'Servicios', href: '/servicios' },
           { label: 'Carrito', href: '/carrito' },
           { label: 'Contacto', href: '/contacto' },
         ],
@@ -93,6 +95,25 @@ export const content = {
     subtitle:
       '¿Tenés alguna pregunta o necesitás una cotización? Escribinos y te respondemos a la brevedad.',
     infoTitle: 'Encontranos',
+  },
+
+  services: {
+    badge: 'Servicios',
+    title: 'Nuestros servicios',
+    subtitle: 'Encontrá lo que necesitás para tu mascota',
+    noResults: 'No hay servicios disponibles en este momento.',
+  },
+
+  serviceDetail: {
+    backTo: 'Volver a servicios',
+    includedLabel: 'Incluido en todos los servicios',
+    selectVariant: 'Elegí una opción',
+    optionalModifiers: 'Opcionales',
+    requiredModifiers: 'Obligatorios',
+    addToCart: 'Agregar al carrito',
+    addedToCart: '¡Agregado!',
+    requestWhatsApp: 'Pedir por WhatsApp',
+    duration: 'Duración estimada',
   },
 
   notFound: {

@@ -23,6 +23,7 @@ const mountRoutes = (app) => {
   app.use('/api/store/categories', storeStatusMiddleware, require('./store/categories.routes'))
   app.use('/api/store/settings', require('./store/settings.routes'))
   app.use('/api/store/orders', storeStatusMiddleware, require('./store/orders.routes'))
+  app.use('/api/store/services', storeStatusMiddleware, require('./store/services.routes'))
 }
 
 module.exports = mountRoutes

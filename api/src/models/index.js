@@ -9,6 +9,8 @@ const models = {
   Media: require('./Media')(sequelize, require('sequelize').DataTypes),
   ChangeRequest: require('./ChangeRequest')(sequelize, require('sequelize').DataTypes),
   Service: require('./Service')(sequelize, require('sequelize').DataTypes),
+  ServiceVariant: require('./ServiceVariant')(sequelize, require('sequelize').DataTypes),
+  ServiceVariantModifier: require('./ServiceVariantModifier')(sequelize, require('sequelize').DataTypes),
 }
 
 Object.keys(models).forEach((modelName) => {

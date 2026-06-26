@@ -7,6 +7,8 @@ import { StoreBlocked } from './components/StoreBlocked'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
+import Services from './pages/Services'
+import ServiceDetail from './pages/ServiceDetail'
 import Cart from './pages/Cart'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
@@ -55,6 +57,8 @@ export default function StorePages() {
             <Route path="/" element={<Home />} />
             <Route path="/productos" element={<Products />} />
             <Route path="/producto/:slug" element={<ProductDetail />} />
+            <Route path="/servicios" element={<Services />} />
+            <Route path="/servicio/:slug" element={<ServiceDetail />} />
             <Route path="/carrito" element={<Cart />} />
             <Route path="/contacto" element={<Contact />} />
             <Route path="*" element={<NotFound />} />

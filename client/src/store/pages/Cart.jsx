@@ -155,19 +155,37 @@ export default function Cart() {
   const [showDeliveryModal, setShowDeliveryModal] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
 
-  /* ── Lógica de negocio — sin cambios ── */
+  const productItems = items.filter(i => i.type === 'product')
+  const serviceItems = items.filter(i => i.type === 'service')
+
+  /* ── Lógica de negocio ── */
   const generateWhatsAppMessage = (deliveryData = null) => {
-    const itemsList = items
-      .map(
-        (item) =>
-          `• ${item.quantity}x ${item.name} — ${formatPrice(item.unitPrice)} c/u`,
-      )
-      .join("\n");
-    let deliverySection = "";
+    let lines = []
+
+    if (productItems.length > 0) {
+      const productsList = productItems
+        .map((item) => `• ${item.quantity}x ${item.name} — ${formatPrice(item.unitPrice)} c/u`)
+        .join('\n')
+      lines.push(`📋 *Productos:*\n${productsList}`)
+    }
+
+    if (serviceItems.length > 0) {
+      const servicesList = serviceItems
+        .map((item) => {
+          const mods = item.selectedModifiers || []
+          const modsText = mods.length > 0 ? ` (${mods.map(m => m.name).join(', ')})` : ''
+          return `• ${item.quantity}x ${item.serviceName} — ${item.variantName}${modsText} — ${formatPrice(item.unitPrice)} c/u`
+        })
+        .join('\n')
+      lines.push(`🐾 *Servicios:*\n${servicesList}`)
+    }
+
+    let deliverySection = ""
     if (deliveryData) {
       deliverySection = `\n\n📦 *Datos de envío:*\n👤 Nombre: ${deliveryData.name}\n📍 Dirección: ${deliveryData.address}`;
     }
-    const message = `👋🏼 Hola, quiero hacer este pedido:\n\n📋 *Productos:*\n${itemsList}\n\n💰 *${total}:* $${totalPrice.toLocaleString("es-AR")}${deliverySection}`;
+
+    const message = `👋🏼 Hola, quiero hacer este pedido:\n\n${lines.join('\n\n')}\n\n💰 *${total}:* $${totalPrice.toLocaleString("es-AR")}${deliverySection}`;
     return encodeURIComponent(message);
   };
 
@@ -178,12 +196,25 @@ export default function Cart() {
 
   const trackOrder = (deliveryData = null) => {
     const order = {
-      items: items.map((i) => ({
-        productId: i.productId,
-        name: i.name,
-        price: i.unitPrice,
-        qty: i.quantity,
-      })),
+      items: items.map((i) => {
+        if (i.type === 'service') {
+          return {
+            type: 'service',
+            serviceId: i.serviceId,
+            name: `${i.serviceName} — ${i.variantName}`,
+            modifiers: (i.selectedModifiers || []).map(m => m.name),
+            price: i.unitPrice,
+            qty: i.quantity,
+          }
+        }
+        return {
+          type: 'product',
+          productId: i.productId,
+          name: i.name,
+          price: i.unitPrice,
+          qty: i.quantity,
+        }
+      }),
       total: totalPrice,
       customerName: deliveryData?.name || null,
       customerPhone: deliveryData?.phone || null,
@@ -299,9 +330,33 @@ export default function Cart() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* ── Lista de items ── */}
             <div className="lg:col-span-2 space-y-3">
-              {items.map((item) => (
-                <CartItem key={item.id} item={item} />
-              ))}
+              {productItems.length > 0 && (
+                <>
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)] pt-2">
+                    Productos
+                  </h3>
+                  <div className="border-t border-[var(--color-border)]" />
+                  {productItems.map((item) => (
+                    <CartItem key={item.id} item={item} />
+                  ))}
+                </>
+              )}
+
+              {serviceItems.length > 0 && productItems.length > 0 && (
+                <div className="border-t-2 border-[var(--color-border)] my-4" />
+              )}
+
+              {serviceItems.length > 0 && (
+                <>
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)] pt-2">
+                    Servicios
+                  </h3>
+                  <div className="border-t border-[var(--color-border)]" />
+                  {serviceItems.map((item) => (
+                    <CartItem key={item.id} item={item} />
+                  ))}
+                </>
+              )}
             </div>
 
             {/* ── Resumen del pedido — sticky ── */}

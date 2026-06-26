@@ -87,6 +87,18 @@ export default function Services() {
       accessor: (s) => <span className="tabular-nums">{s.price ? formatPrice(s.price) : '—'}</span>,
     },
     {
+      header: 'Variantes',
+      className: 'min-w-[80px]',
+      accessor: (s) => {
+        const count = s.variants?.length || 0
+        return (
+          <span className={`text-xs font-medium ${count > 0 ? 'text-cyan-400' : 'text-zinc-600'}`}>
+            {count > 0 ? `${count} variante${count !== 1 ? 's' : ''}` : '—'}
+          </span>
+        )
+      },
+    },
+    {
       header: 'Estado',
       accessor: (s) => (
         <button
