@@ -1,10 +1,9 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { content } from "../../data/siteData";
 import { useStore } from "../context/StoreContext";
-import { useProducts } from "../../hooks/useProducts";
-import { ProductGrid } from "../ProductGrid";
+import { ProductCarousel } from "../components/shared/ProductCarousel";
 import { HeroSection } from "../components/shared/HeroSection";
 import { PawIcon } from "../components/ui/PawIcon";
 import { IconDivider } from "../components/ui/IconDivider";
@@ -138,8 +137,13 @@ export default function Home() {
     categoriesSubtitle,
     cta,
   } = content.home;
-  const { products: featuredProducts = [] } = useProducts({ limit: 8 });
-  const { categories = [] } = useStore();
+  const { categories = [], productsMap } = useStore();
+
+  const featuredProducts = useMemo(() =>
+    Object.values(productsMap)
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 5)
+  , [productsMap]);
 
   return (
     <>
@@ -208,7 +212,7 @@ export default function Home() {
             </div>
           </div>
 
-          <ProductGrid products={featuredProducts} />
+          <ProductCarousel products={featuredProducts} />
 
           <div className="text-center mt-10">
             <Link
