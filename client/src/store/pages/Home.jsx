@@ -167,7 +167,7 @@ export default function Home() {
           bg blanco. Onda al fondo transiciona a amarillo.
       ══════════════════════════════════════════════ */}
       <section
-        className="relative px-4 sm:px-6 lg:px-8 bg-white overflow-hidden"
+        className="relative px-4 sm:px-6 lg:px-8 bg-white"
         style={{ paddingTop: "3rem", paddingBottom: "5rem" }}
       >
         {/* Imágenes superpuestas — entran desde la izq con delay + wave */}
@@ -185,7 +185,7 @@ export default function Home() {
           bottom="bottom-10"
           delay={300}
           wave
-          className="w-48 md:w-72"
+          className="w-48 md:w-72 z-10"
           style={{ left: "-12px" }}
         />
 

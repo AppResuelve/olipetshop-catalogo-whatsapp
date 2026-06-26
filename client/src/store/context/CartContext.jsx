@@ -74,9 +74,7 @@ export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, undefined, () => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
-      console.log('[CART] lazy initializer — localStorage:', stored)
       const parsed = stored ? JSON.parse(stored) : []
-      console.log('[CART] lazy initializer — state.items:', JSON.stringify(parsed))
       return { items: parsed }
     } catch {
       return { items: [] }
@@ -88,11 +86,9 @@ export function CartProvider({ children }) {
   }, [state.items])
 
   const cartItems = useMemo(() => {
-    console.log('[CART] useMemo re-eval — productsMap keys:', Object.keys(productsMap).length, 'loading:', loading, 'state.items:', JSON.stringify(state.items))
     const result = state.items
       .map((item) => {
         const product = productsMap[item.productId]
-        console.log('[CART] useMemo — productId:', item.productId, 'found:', !!product)
 
         if (!product) {
           return {
@@ -115,7 +111,6 @@ export function CartProvider({ children }) {
 
         return { ...product, quantity: item.quantity, unitPrice: Number(unitPrice), subtotal: Number(unitPrice) * item.quantity }
       })
-    console.log('[CART] useMemo — cartItems:', result.length, 'items')
     return result
   }, [state.items, productsMap, loading])
 

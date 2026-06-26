@@ -135,14 +135,7 @@ const moveToFolder = async (id, targetFolder) => {
     ? `clients/${prefix}/${targetFolder}/${basename}`
     : `clients/${targetFolder}/${basename}`
 
-  console.log('=== moveToFolder DEBUG ===')
-  console.log('media.id:', media.id)
-  console.log('oldPublicId:', oldPublicId)
-  console.log('basename:', basename)
-  console.log('newPublicId:', newPublicId)
-
   if (oldPublicId === newPublicId) {
-    console.log('  → misma carpeta, no se mueve')
     return media
   }
 
@@ -150,9 +143,7 @@ const moveToFolder = async (id, targetFolder) => {
     const result = await cloudinary.uploader.rename(oldPublicId, newPublicId, {
       resource_type: 'image',
     })
-    console.log('rename result:', JSON.stringify(result))
   } catch (renameErr) {
-    console.error('rename ERROR:', renameErr.message || renameErr)
     throw renameErr
   }
 

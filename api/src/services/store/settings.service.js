@@ -23,7 +23,6 @@ const ensureDefaults = async () => {
   for (const { key, value } of DEFAULTS) {
     await Setting.findOrCreate({ where: { key }, defaults: { key, value } })
   }
-  console.log('Settings defaults asegurados.')
 }
 
 const getSettings = async () => {

@@ -1,9 +1,5 @@
 const sendActivationEmail = async (to, link) => {
   if (process.env.NODE_ENV !== 'production') {
-    console.log('=== EMAIL DE ACTIVACIÓN (DEV) ===')
-    console.log('Para:', to)
-    console.log('Link:', link)
-    console.log('===================================')
     return
   }
 
@@ -31,10 +27,6 @@ const sendActivationEmail = async (to, link) => {
 
 const sendResetPasswordEmail = async (to, link) => {
   if (process.env.NODE_ENV !== 'production') {
-    console.log('=== EMAIL DE RECUPERACIÓN (DEV) ===')
-    console.log('Para:', to)
-    console.log('Link:', link)
-    console.log('====================================')
     return
   }
 

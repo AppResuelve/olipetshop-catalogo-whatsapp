@@ -17,13 +17,10 @@ export function StoreProvider({ children }) {
 
         const status = settings.store_status || 'active'
         if (status !== 'active') {
-          console.log('[STORE] store not active — status:', settings.store_status)
           setCategories([])
           setProductsMap({})
           return
         }
-
-        console.log('[STORE] store active — loading products...')
 
         const [cats, prods] = await Promise.all([
           categoriesService.list(),
@@ -37,7 +34,6 @@ export function StoreProvider({ children }) {
           map[p.id] = p
         })
         setProductsMap(map)
-        console.log('[STORE] productsMap loaded — products:', prods.products.length, 'map keys:', Object.keys(map).length)
       } catch {
         // ignore
       } finally {
