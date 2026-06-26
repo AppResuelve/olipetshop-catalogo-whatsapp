@@ -28,10 +28,21 @@ const bulkProductSchema = z.array(z.object({
   wholesaleMinQty: z.number().int().nullable().optional(),
 }))
 
+const productUpdateSchema = productSchema.partial()
+
 function validateProduct(body) {
   const result = productSchema.safeParse(body)
   if (!result.success) {
-    const message = result.error.errors.map(e => e.message).join(', ')
+    const message = result.error.issues.map(e => e.message).join(', ')
+    throw Object.assign(new Error(message), { status: 400 })
+  }
+  return result.data
+}
+
+function validateProductUpdate(body) {
+  const result = productUpdateSchema.safeParse(body)
+  if (!result.success) {
+    const message = result.error.issues.map(e => e.message).join(', ')
     throw Object.assign(new Error(message), { status: 400 })
   }
   return result.data
@@ -40,10 +51,10 @@ function validateProduct(body) {
 function validateBulkProducts(body) {
   const result = bulkProductSchema.safeParse(body.products)
   if (!result.success) {
-    const message = result.error.errors.map(e => e.message).join(', ')
+    const message = result.error.issues.map(e => e.message).join(', ')
     throw Object.assign(new Error(message), { status: 400 })
   }
   return result.data
 }
 
-module.exports = { productSchema, bulkProductSchema, validateProduct, validateBulkProducts }
+module.exports = { productSchema, productUpdateSchema, bulkProductSchema, validateProduct, validateProductUpdate, validateBulkProducts }

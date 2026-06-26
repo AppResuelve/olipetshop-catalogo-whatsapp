@@ -67,6 +67,11 @@ const create = async (data) => {
 
 const update = async (id, data) => {
   const product = await getById(id)
+
+  if (Object.keys(data).length === 1 && 'status' in data && data.status === product.status) {
+    return product
+  }
+
   if (!data.slug && data.name) {
     data.slug = slugify(data.name)
   }

@@ -55,18 +55,22 @@ export default function Products() {
     if (!result.isConfirmed) return
 
     setBulkProcessing(true)
-    try {
-      for (const id of selected) {
+    let errors = 0
+    for (const id of selected) {
+      try {
         await api.put(`/admin/products/${id}`, { status })
         updateProduct(id, { status })
+      } catch {
+        errors++
       }
-      Alert.fire({ message: `${selected.length} producto(s) ${status === 'active' ? 'activados' : 'pasados a borrador'}`, type: 'success' })
-      setSelected([])
-    } catch {
-      Alert.fire({ message: 'Error al cambiar estado', type: 'error' })
-    } finally {
-      setBulkProcessing(false)
     }
+    if (errors === 0) {
+      Alert.fire({ message: `${selected.length} producto(s) ${status === 'active' ? 'activados' : 'pasados a borrador'}`, type: 'success' })
+    } else {
+      Alert.fire({ message: `${selected.length - errors} actualizado(s), ${errors} con error`, type: 'warning' })
+    }
+    setSelected([])
+    setBulkProcessing(false)
   }
 
   const handleBulkDelete = async () => {
