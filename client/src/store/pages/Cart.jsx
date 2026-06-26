@@ -329,10 +329,10 @@ export default function Cart() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* ── Lista de items ── */}
-            <div className="lg:col-span-2 space-y-3">
+            <div className="lg:col-span-2 space-y-6">
               {productItems.length > 0 && (
                 <>
-                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)] pt-2">
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)]">
                     Productos
                   </h3>
                   <div className="border-t border-[var(--color-border)]" />
@@ -342,13 +342,9 @@ export default function Cart() {
                 </>
               )}
 
-              {serviceItems.length > 0 && productItems.length > 0 && (
-                <div className="border-t-2 border-[var(--color-border)] my-4" />
-              )}
-
               {serviceItems.length > 0 && (
                 <>
-                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)] pt-2">
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-[var(--color-text-muted)]">
                     Servicios
                   </h3>
                   <div className="border-t border-[var(--color-border)]" />

@@ -58,8 +58,8 @@ const syncVariants = async (serviceId, variants = [], transaction) => {
       serviceId: serviceId,
       name: v.name,
       price: v.price || 0,
-      duration_minutes: v.duration_minutes || null,
-      sort_order: v.sort_order || 0,
+      durationMinutes: v.duration_minutes || null,
+      sortOrder: v.sort_order || 0,
       status: v.status || 'active',
     }
 
