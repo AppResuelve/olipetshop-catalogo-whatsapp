@@ -172,13 +172,13 @@ export default function Home() {
       ══════════════════════════════════════════════ */}
       <section
         className="relative px-4 sm:px-6 lg:px-8 bg-white"
-        style={{ paddingTop: "3rem", paddingBottom: "5rem" }}
+        style={{ paddingTop: "3rem", paddingBottom: "7rem" }}
       >
         {/* Imágenes superpuestas — entran desde la izq con delay + wave */}
         <SlideUpImage
           src="/gif/mano1.png"
           position="left"
-          bottom="top-10"
+          bottom="top-0"
           wave
           className="w-48 md:w-72"
           style={{ left: "-12px" }}
@@ -186,10 +186,10 @@ export default function Home() {
         <SlideUpImage
           src="/gif/mano2.png"
           position="left"
-          bottom="bottom-10"
+          bottom="bottom-0"
           delay={300}
           wave
-          className="w-48 md:w-72 z-10"
+          className="w-48 md:w-72"
           style={{ left: "-12px" }}
         />
 
