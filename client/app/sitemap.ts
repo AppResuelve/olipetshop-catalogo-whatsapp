@@ -1,7 +1,7 @@
 import { productsService, servicesService } from '@/services/storeService'
 
 export default async function sitemap() {
-  const base = 'https://petalosserena.com.ar'
+  const base = 'https://olipetshop.com.ar'
 
   const staticPages = [
     { url: base, lastModified: new Date() },
