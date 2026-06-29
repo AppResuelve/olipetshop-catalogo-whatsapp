@@ -14,6 +14,7 @@ const mountRoutes = (app) => {
   app.use('/api/admin/upload', authMiddleware, require('./admin/upload.routes'))
   app.use('/api/admin/change-requests', authMiddleware, require('./admin/changeRequests.routes'))
   app.use('/api/admin/services', authMiddleware, require('./admin/services.routes'))
+  app.use('/api/admin/attributes', authMiddleware, require('./admin/attributes.routes'))
 
   // Internal (requiere APPRESUELVE_SECRET — solo para la platform)
   app.use('/api/internal', require('./internal.routes'))
