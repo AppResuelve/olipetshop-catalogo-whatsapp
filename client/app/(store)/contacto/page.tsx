@@ -254,7 +254,7 @@ export default function Contact() {
                 width="100%"
                 height="360"
                 style={{ border: 0, display: "block" }}
-                allowFullScreen=""
+                allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
