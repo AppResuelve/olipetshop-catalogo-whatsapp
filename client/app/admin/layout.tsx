@@ -4,23 +4,36 @@
 import { useEffect, useState } from "react"
 import { Menu } from "lucide-react"
 import dynamic from "next/dynamic"
+import { DM_Sans } from "next/font/google"
 import { usePathname, useRouter } from "next/navigation"
 import { AuthProvider, useAuth } from "@/components/admin/context/AuthContext"
 import { AlertProvider } from "@/components/admin/ui/AlertContext"
 import { UnsavedChangesProvider } from "@/context/UnsavedChangesContext"
 import { siteData } from "@/data/siteData"
+import { Spinner } from "@/components/admin/ui/Spinner"
+import { Skeleton } from "@/components/admin/ui/Skeleton"
 
 const Sidebar = dynamic(() => import("@/components/admin/Sidebar"), { ssr: false })
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-admin',
+  display: 'swap',
+})
 
 const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
   '/dashboard/products': 'Productos',
   '/dashboard/services': 'Servicios',
   '/dashboard/categories': 'Categorías',
+  '/dashboard/tags': 'Etiquetas',
+  '/dashboard/discounts': 'Descuentos',
   '/dashboard/media': 'Galería',
   '/dashboard/settings': 'Configuración',
   '/dashboard/store': 'Tienda',
   '/dashboard/attributes': 'Atributos',
+  '/dashboard/change-requests': 'Solicitar cambio',
 } as Record<string, string>
 
 function AdminShell({ children }: { children: React.ReactNode }) {
@@ -58,7 +71,14 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     document.title = `${pageTitle} — ${businessName}`
   }, [pathname])
 
-  if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center"><p className="text-zinc-400">Cargando...</p></div>
+  if (loading) return (
+    <div className="min-h-screen bg-zinc-950 flex">
+      <Skeleton className="w-64 h-screen rounded-none hidden lg:block" />
+      <div className="flex-1 flex items-center justify-center">
+        <Spinner />
+      </div>
+    </div>
+  )
 
   if (!user && !isPublic) return null
 
@@ -108,7 +128,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="admin-root">
+    <div className={`admin-root ${dmSans.variable}`}>
       <AlertProvider>
         <UnsavedChangesProvider>
           <AuthProvider>

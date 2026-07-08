@@ -3,9 +3,11 @@
 import { useState, useEffect, useMemo, Fragment } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Loader, Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react'
-import { Button, Input, Textarea, Select } from '@/components/admin/ui/Form'
+import { ArrowLeft, Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react'
+import { Button, Input, Textarea } from '@/components/admin/ui/Form'
+import { DropdownSelect } from '@/components/admin/ui/DropdownSelect'
 import ImageUpload from '@/components/admin/ImageUpload'
+import { Spinner } from '@/components/admin/ui/Spinner'
 import { useAlert } from '@/components/admin/ui/AlertContext'
 import api from '@/services/admin-api'
 import { useUnsavedChanges } from '@/context/UnsavedChangesContext'
@@ -70,7 +72,8 @@ function VariantCard({ variant, index, attributes, onChange, onRemove }) {
           <div className="grid grid-cols-3 gap-3">
             <Input label="Precio" type="number" value={variant.price} onChange={(e) => handleChange('price', e.target.value)} />
             <Input label="Duración (min)" type="number" value={variant.durationMinutes} onChange={(e) => handleChange('durationMinutes', e.target.value)} placeholder="Opcional" />
-            <Select label="Estado" value={variant.status} onChange={(e) => handleChange('status', e.target.value)}
+            <DropdownSelect label="Estado" value={variant.status}
+              onChange={(v) => handleChange('status', v)}
               options={[{ value: 'active', label: 'Activo' }, { value: 'draft', label: 'Borrador' }]} />
           </div>
           <ImageUpload images={variant.images || []} onChange={(imgs) => handleChange('images', imgs)} max={1} folder={`servicios/var-${variant.id || index}`} />
@@ -257,6 +260,7 @@ export default function ServiceForm() {
       return
     }
     if (Object.keys(modalAttrs).length === 0) {
+      setIsDirty(true)
       setSelectedAttributes({})
       setVariants([])
       setAttrModalOpen(false)
@@ -354,7 +358,7 @@ export default function ServiceForm() {
       }
       if (isEditing) await api.put(`/admin/services/${id}`, payload)
       else await api.post('/admin/services', payload)
-      Alert.fire({ message: isEditing ? 'Servicio actualizado' : 'Servicio creado', type: 'success' })
+      Alert.fire({ message: isEditing ? 'Servicio actualizado' : 'Servicio creado', type: 'success', duration: 1500 })
       setIsDirty(false)
       router.push('/dashboard/services')
     } catch (err) {
@@ -364,12 +368,12 @@ export default function ServiceForm() {
     } finally { setSaving(false) }
   }
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Loader className="w-6 h-6 animate-spin text-cyan-400" /></div>
+  if (loading) return <div className="flex items-center justify-center py-32"><Spinner /></div>
   const availableAttrs = attributes.filter(a => !selectedAttributes[a.id])
 
   return (
     <div>
-      <button onClick={() => router.push('/dashboard/services')} className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 mb-4 transition-colors">
+      <button onClick={async () => { if (await confirmLeave()) router.push('/dashboard/services') }} className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 mb-4 transition-colors">
         <ArrowLeft className="w-4 h-4" /><span className="text-sm">Volver a servicios</span>
       </button>
 
@@ -384,7 +388,8 @@ export default function ServiceForm() {
         <div className="grid grid-cols-2 gap-4">
           <Input label="Precio" type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)}
             readOnly={variants.length > 0} disabled={variants.length > 0} />
-          <Select label="Estado" value={form.status} onChange={(e) => handleChange('status', e.target.value)}
+          <DropdownSelect label="Estado" value={form.status}
+            onChange={(v) => handleChange('status', v)}
             options={[{ value: 'active', label: 'Activo' }, { value: 'draft', label: 'Borrador' }]} />
         </div>
 

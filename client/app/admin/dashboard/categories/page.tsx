@@ -4,7 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { Plus, Edit, Trash2, GripVertical } from 'lucide-react'
 import { Button, Input } from '@/components/admin/ui/Form'
 import { Modal } from '@/components/admin/ui/Modal'
+import { Spinner } from '@/components/admin/ui/Spinner'
 import { useCategories } from '@/hooks/admin-useCategories'
+import { useUnsavedChanges } from '@/context/UnsavedChangesContext'
 import api from '@/services/admin-api'
 import { useAlert } from '@/components/admin/ui/AlertContext'
 
@@ -17,6 +19,7 @@ const slugify = (text) =>
 
 export default function Categories() {
   const { categories, loading, refetch } = useCategories()
+  const { setIsDirty, confirmLeave } = useUnsavedChanges()
   const Alert = useAlert()
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
@@ -67,6 +70,7 @@ export default function Categories() {
     setName('')
     setSlug('')
     setSlugManual(false)
+    setIsDirty(false)
     setModalOpen(true)
   }
 
@@ -75,19 +79,30 @@ export default function Categories() {
     setName(cat.name)
     setSlug(cat.slug)
     setSlugManual(true)
+    setIsDirty(false)
     setModalOpen(true)
+  }
+
+  const closeModal = async () => {
+    if (await confirmLeave()) {
+      setModalOpen(false)
+      setEditing(null)
+      setIsDirty(false)
+    }
   }
 
   const handleNameChange = (value) => {
     setName(value)
+    setIsDirty(true)
     if (!slugManual) {
       setSlug(slugify(value))
     }
   }
 
   const handleSlugChange = (value) => {
+    setSlug(value)
     setSlugManual(true)
-    setSlug(slugify(value))
+    setIsDirty(true)
   }
 
   const handleSave = async (e) => {
@@ -106,6 +121,8 @@ export default function Categories() {
         await api.post('/admin/categories', { name, slug: finalSlug, order: categories.length })
       }
       setModalOpen(false)
+      setIsDirty(false)
+      Alert.fire({ message: editing ? 'Categoría actualizada' : 'Categoría creada', type: 'success', duration: 1500 })
       refetch()
     } catch (err) {
       let msg = 'Error al guardar categoría'
@@ -147,10 +164,15 @@ export default function Categories() {
         </Button>
       </div>
 
+      <div className="relative min-h-[200px]">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <Spinner />
+          </div>
+        )}
+
       <div className="space-y-2">
-        {loading ? (
-          <p className="text-zinc-500">Cargando...</p>
-        ) : ordered.length === 0 ? (
+        {ordered.length === 0 ? (
           <p className="text-zinc-500">No hay categorías</p>
         ) : (
           ordered.map((cat, i) => (
@@ -179,13 +201,14 @@ export default function Categories() {
           ))
         )}
       </div>
+      </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Editar categoría' : 'Nueva categoría'}>
+      <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Editar categoría' : 'Nueva categoría'}>
         <form onSubmit={handleSave} className="space-y-4">
           <Input label="Nombre" value={name} onChange={(e) => handleNameChange(e.target.value)} required />
           <Input label="Slug" value={slug} onChange={(e) => handleSlugChange(e.target.value)} placeholder="nombre-de-categoria" required />
           <div className="flex gap-3 pt-2 justify-end">
-            <Button type="button" variant="secondary" onClick={() => setModalOpen(false)}>Cancelar</Button>
+            <Button type="button" variant="secondary" onClick={closeModal}>Cancelar</Button>
             <Button type="submit">{editing ? 'Guardar cambios' : 'Crear categoría'}</Button>
           </div>
         </form>

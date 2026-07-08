@@ -4,6 +4,8 @@ const {
   ProductSku,
   AttributeValue,
   Attribute,
+  TagValue,
+  Tag,
   sequelize,
 } = require("../../models");
 
@@ -25,7 +27,7 @@ const skuInclude = {
 };
 
 const list = async (query = {}) => {
-  const { page = 1, limit = 20, search, categoryId, status } = query;
+  const { page = 1, limit = 20, search, categoryId, status, tagId } = query;
   const offset = (page - 1) * limit;
 
   const where = {};
@@ -38,12 +40,19 @@ const list = async (query = {}) => {
   if (categoryId) where.categoryId = categoryId;
   if (status) where.status = status;
 
+  const include = [
+    { model: Category, as: "category", attributes: ["id", "name", "slug"] },
+    skuInclude,
+    { model: TagValue, as: "tagValues", include: [{ model: Tag, as: "tag" }] },
+  ];
+
+  if (tagId) {
+    include[2].where = { id: Number(tagId) };
+  }
+
   const { count, rows } = await Product.findAndCountAll({
     where,
-    include: [
-      { model: Category, as: "category", attributes: ["id", "name", "slug"] },
-      skuInclude,
-    ],
+    include,
     distinct: true,
     order: [["name", "ASC"]],
     limit: Number(limit),
@@ -59,10 +68,15 @@ const list = async (query = {}) => {
 };
 
 const getById = async (id) => {
-  const product = await Product.findByPk(id, {
+  const numericId = Number(id)
+  if (!Number.isInteger(numericId) || numericId <= 0) {
+    throw Object.assign(new Error("ID de producto inválido"), { status: 400 });
+  }
+  const product = await Product.findByPk(numericId, {
     include: [
       { model: Category, as: "category", attributes: ["id", "name", "slug"] },
       skuInclude,
+      { model: TagValue, as: "tagValues", include: [{ model: Tag, as: "tag" }] },
     ],
   });
   if (!product) {
@@ -139,6 +153,13 @@ const create = async (data) => {
     data.slug = slugify(data.name);
   }
 
+  if (data.slug) {
+    const existing = await Product.findOne({ where: { slug: data.slug } });
+    if (existing) {
+      throw Object.assign(new Error('Ya existe un producto con ese slug'), { status: 400 });
+    }
+  }
+
   const { comparePrice, discountPercentage } = resolveDiscountFields(
     data.retailPrice,
     data.comparePrice,
@@ -147,10 +168,13 @@ const create = async (data) => {
   data.comparePrice = comparePrice;
   data.discountPercentage = discountPercentage;
 
-  const { skus, ...productData } = data;
+  const { skus, tagIds, ...productData } = data;
 
   const result = await sequelize.transaction(async (t) => {
     const product = await Product.create(productData, { transaction: t });
+    if (tagIds && tagIds.length > 0) {
+      await product.setTagValues(tagIds, { transaction: t });
+    }
     if (skus && skus.length > 0) {
       const basePrices = { retailPrice: product.retailPrice, wholesalePrice: product.wholesalePrice, wholesaleMinQty: product.wholesaleMinQty }
       await syncSkus(product.id, skus, basePrices, t);
@@ -218,10 +242,13 @@ const update = async (id, data) => {
   data.comparePrice = comparePrice;
   data.discountPercentage = discountPercentage;
 
-  const { skus, ...productData } = data;
+  const { skus, tagIds, ...productData } = data;
 
   const result = await sequelize.transaction(async (t) => {
     await product.update(productData, { transaction: t });
+    if (tagIds !== undefined) {
+      await product.setTagValues(tagIds, { transaction: t });
+    }
     if (skus && Array.isArray(skus)) {
       const basePrices = { retailPrice: product.retailPrice, wholesalePrice: product.wholesalePrice, wholesaleMinQty: product.wholesaleMinQty }
       await syncSkus(product.id, skus, basePrices, t);
@@ -315,13 +342,14 @@ const bulkCreate = async (products, categoryId) => {
       }
       await t.commit()
     } catch (err) { await t.rollback(); throw err }
-    return { created: rows.length, warnings }
+    return { created: rows.length, warnings, createdAttributes: [] }
   }
 
   // Slow path: productos con variantes, create individual + findOrCreate attributes
   const existingSlugs = new Set((await Product.findAll({ attributes: ["slug"] })).map((p) => p.slug))
   const used = new Set([...existingSlugs])
   const warnings = []
+  const createdAttributes = []
   let createdCount = 0
 
   const t = await sequelize.transaction()
@@ -359,11 +387,14 @@ const bulkCreate = async (products, categoryId) => {
           const attributeValueIds = []
           if (sku.attrValues?.length > 0) {
             for (const { attrName, value } of sku.attrValues) {
-              const [attr] = await Attribute.findOrCreate({
+              const [attr, attrCreated] = await Attribute.findOrCreate({
                 where: { name: { [require('sequelize').Op.iLike]: attrName } },
                 defaults: { name: attrName, sortOrder: 0 },
                 transaction: t,
               })
+              if (attrCreated && !createdAttributes.includes(attr.name)) {
+                createdAttributes.push(attr.name)
+              }
               const [attrValue] = await AttributeValue.findOrCreate({
                 where: { attributeId: attr.id, value: { [require('sequelize').Op.iLike]: value } },
                 defaults: { attributeId: attr.id, value, sortOrder: 0 },
@@ -401,7 +432,7 @@ const bulkCreate = async (products, categoryId) => {
     await t.commit()
   } catch (err) { await t.rollback(); throw err }
 
-  return { created: createdCount, warnings }
+  return { created: createdCount, warnings, createdAttributes }
 };
 
 module.exports = { list, getById, create, update, remove, bulkCreate };
