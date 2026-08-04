@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ShoppingCart, ArrowLeft, Tag } from "lucide-react";
 import { PawIcon } from "@/components/ui/PawIcon";
 import { BottomWave } from "@/components/ui/BottomWave";
@@ -97,6 +98,7 @@ export default function Cart() {
     itemCount, subtotal, total, requestQuote,
   } = content.cart;
   const { store, loading } = useStore();
+  const router = useRouter();
   const [showDeliveryModal, setShowDeliveryModal] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
 
@@ -239,15 +241,18 @@ export default function Cart() {
 
         <div className="relative max-w-6xl mx-auto">
           {/* Back link */}
-          <Link
-            href="/productos"
+          <button
+            onClick={() => {
+              if (window.history.length > 1) router.back()
+              else router.push('/productos')
+            }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold
               text-[var(--color-text-muted)] hover:text-[var(--color-primary)]
               transition-colors mb-5 group"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             Volver a productos
-          </Link>
+          </button>
 
           <div className="flex items-end justify-between gap-4">
             <div>
