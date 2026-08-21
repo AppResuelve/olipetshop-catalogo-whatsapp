@@ -9,6 +9,17 @@ const {
   sequelize,
 } = require("../../models");
 const { Op } = require("sequelize");
+const sanitizeHtml = require("sanitize-html");
+
+const sanitizeDescription = (html) =>
+  sanitizeHtml(html || "", {
+    allowedTags: [...sanitizeHtml.defaults.allowedTags, "img", "u", "s"],
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ["src", "alt", "width", "height"],
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+  });
 
 const skuInclude = {
   model: ProductSku,
@@ -167,6 +178,7 @@ const getBySlug = async (slug) => {
   if (!product) {
     throw Object.assign(new Error('Producto no encontrado'), { status: 404 });
   }
+  product.description = sanitizeDescription(product.description);
   return product;
 };
 

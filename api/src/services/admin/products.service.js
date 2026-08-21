@@ -249,7 +249,7 @@ const update = async (id, data) => {
     if (tagIds !== undefined) {
       await product.setTagValues(tagIds, { transaction: t });
     }
-    if (skus && Array.isArray(skus)) {
+    if (skus && skus.length > 0) {
       const basePrices = { retailPrice: product.retailPrice, wholesalePrice: product.wholesalePrice, wholesaleMinQty: product.wholesaleMinQty }
       await syncSkus(product.id, skus, basePrices, t);
       const activeSkus = skus.filter(s => s.status !== 'draft')
@@ -264,26 +264,19 @@ const update = async (id, data) => {
         await product.save({ transaction: t })
       }
     } else {
-      // Producto simple: crear/actualizar SKU base
-      const [baseSku] = await ProductSku.findOrCreate({
-        where: { productId: product.id },
-        defaults: {
-          productId: product.id,
-          retailPrice: product.retailPrice || 0,
-          wholesalePrice: product.wholesalePrice,
-          wholesaleMinQty: product.wholesaleMinQty,
-          stock: 0, sku: null, images: [], sortOrder: 0, status: 'active',
-        },
-        transaction: t,
-      })
-      if (!baseSku._options?.isNewRecord) {
-        await baseSku.update({
-          retailPrice: product.retailPrice || 0,
-          wholesalePrice: product.wholesalePrice,
-          wholesaleMinQty: product.wholesaleMinQty,
-        }, { transaction: t })
-      }
-      await baseSku.setAttributeValues([], { transaction: t })
+      // Producto simple: destruir SKUs viejos y crear el SKU base
+      await ProductSku.destroy({ where: { productId: product.id }, transaction: t })
+      await ProductSku.create({
+        productId: product.id,
+        retailPrice: product.retailPrice || 0,
+        wholesalePrice: product.wholesalePrice,
+        wholesaleMinQty: product.wholesaleMinQty,
+        stock: 0,
+        sku: null,
+        images: [],
+        sortOrder: 0,
+        status: 'active',
+      }, { transaction: t })
     }
     return Product.findByPk(id, { include: [skuInclude], transaction: t });
   });
